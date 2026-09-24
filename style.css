@@ -46,6 +46,18 @@ body {
     .details-section {
         padding: 135px 18px 70px 18px;
     }
+    .first-card-frame {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        bottom: 20px;
+    }
+    .inner-gold-frame {
+        top: 3.5px;
+        left: 3.5px;
+        right: 3.5px;
+        bottom: 3.5px;
+    }
     .top-left-flower {
         width: 160px;
         max-width: 45vw;
@@ -69,7 +81,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 999;
+    z-index: 100000;
     background-color: #000;
     transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -291,16 +303,40 @@ video {
     left: 0;
     width: 185px;
     max-width: 48vw;
-    z-index: 1;
+    z-index: 3;
     pointer-events: none;
     opacity: 0.95;
+}
+
+/* Double-Hairline Letterpress Frame for Opening Card */
+.first-card-frame {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 24px;
+    border: 1px solid rgba(125, 14, 14, 0.22);
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.inner-gold-frame {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 1px solid rgba(212, 175, 55, 0.42);
+    border-radius: 2px;
+    pointer-events: none;
 }
 
 .content-wrapper {
     max-width: 450px;
     width: 100%;
     position: relative;
-    z-index: 2;
+    z-index: 4;
 }
 
 .names-block {

@@ -30,10 +30,23 @@ function setupHeroCurtainVideo() {
     if (!video || !playOverlay) return;
 
     let experienceStarted = false;
+    let heroDismissed = false;
 
     const startExperience = () => {
         if (experienceStarted) return;
         experienceStarted = true;
+
+        // Pre-warm / prime audio silently on this user touch gesture so iOS and Android allow play later
+        const music = document.getElementById('bgMusic');
+        if (music) {
+            music.volume = 0;
+            const primePromise = music.play();
+            if (primePromise !== undefined) {
+                primePromise.then(() => {
+                    // Audio unlocked and primed silently in background
+                }).catch(e => console.log('Audio priming:', e));
+            }
+        }
 
         // Fade overlay out
         playOverlay.style.opacity = '0';
@@ -41,24 +54,25 @@ function setupHeroCurtainVideo() {
             playOverlay.style.display = 'none';
         }, 500);
 
-        // Start background music
-        playMusic();
-
         // Play the curtain opening video
         const playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch((err) => {
                 console.log("Video autoplay prevented or failed:", err);
-                // Fallback: If video cannot play, smoothly dismiss hero
                 dismissHeroSection();
             });
         }
     };
 
     const dismissHeroSection = () => {
-        if (!heroSection) return;
+        if (heroDismissed || !heroSection) return;
+        heroDismissed = true;
+
         heroSection.style.opacity = '0';
         heroSection.style.visibility = 'hidden';
+
+        // THE CARD IS NOW OPEN: Start the music right as the card reveals!
+        startCardMusic();
 
         setTimeout(() => {
             heroSection.style.display = 'none';
@@ -71,10 +85,10 @@ function setupHeroCurtainVideo() {
     playOverlay.addEventListener('click', startExperience);
     playOverlay.addEventListener('touchstart', startExperience, { passive: true });
 
-    // When video ends, smoothly dissolve hero section and unlock scrolling
+    // When video ends, smoothly dissolve hero section, open card, and start music
     video.addEventListener('ended', dismissHeroSection);
 
-    // If user clicks the video during playback, allow skipping straight to invitation
+    // If user clicks the video during playback, allow skipping straight to card
     video.addEventListener('click', dismissHeroSection);
 }
 
@@ -86,27 +100,47 @@ let userManuallyToggled = false;
 let audioContext = null;
 let harpTimer = null;
 
-function setupAudioController() {
+function startCardMusic() {
+    if (userManuallyToggled) return; // User already chose to mute
     const music = document.getElementById('bgMusic');
-    const musicToggle = document.getElementById('musicToggle');
-    const musicIcon = document.getElementById('musicIcon');
-
     if (music) {
-        music.volume = 0.4;
+        music.currentTime = 0;
+        music.volume = 0.45;
+        const p = music.play();
+        if (p !== undefined) {
+            p.then(() => {
+                isMusicPlaying = true;
+                updateMusicIcon(true);
+            }).catch(err => {
+                console.log("Audio play on card open:", err);
+                startHarpSynthesizer();
+                isMusicPlaying = true;
+                updateMusicIcon(true);
+            });
+        }
+    } else {
+        startHarpSynthesizer();
+        isMusicPlaying = true;
+        updateMusicIcon(true);
     }
+}
 
-    if (musicToggle && musicIcon) {
-        musicToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userManuallyToggled = true;
+function setupAudioController() {
+    const musicToggle = document.getElementById('musicToggle');
 
-            if (isMusicPlaying) {
-                pauseMusic();
-            } else {
-                playMusic();
-            }
-        });
-    }
+    if (!musicToggle) return;
+
+    musicToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        userManuallyToggled = true;
+
+        if (isMusicPlaying) {
+            pauseMusic();
+        } else {
+            playMusic();
+        }
+    });
 
     // Pause audio when browser is minimized or tab is hidden
     document.addEventListener("visibilitychange", () => {
@@ -138,15 +172,17 @@ function updateMusicIcon(playing) {
 
 function playMusic() {
     const music = document.getElementById('bgMusic');
+    stopHarpSynthesizer();
 
     if (music) {
+        music.volume = 0.45;
         const promise = music.play();
         if (promise !== undefined) {
             promise.then(() => {
                 isMusicPlaying = true;
                 updateMusicIcon(true);
-            }).catch(() => {
-                // If MP3 is not yet dropped into assets/audio, play romantic ambient harp
+            }).catch((err) => {
+                console.log("playMusic fallback:", err);
                 startHarpSynthesizer();
                 isMusicPlaying = true;
                 updateMusicIcon(true);
@@ -517,7 +553,7 @@ function setupRSVP() {
         message.innerText = "Thank you! We look forward to celebrating together.";
         if (feedbackBox) feedbackBox.classList.remove('hidden');
 
-        const waMsg = "Hi Anjita & Akash! ❤️ I'm delighted to accept your kind invitation to celebrate your Engagement on November 13, 2026! 🎉";
+        const waMsg = "Hi Anjita & Akash! ❤️ I'm delighted to accept your kind invitation for November 13, 2026! 🎉";
         if (waLink) {
             waLink.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
             waLink.classList.remove('hidden');
@@ -571,7 +607,7 @@ function setupShareButton() {
         };
 
         if (navigator.share) {
-            navigator.share(shareData).catch(() => {});
+            navigator.share(shareData).catch(() => { });
         } else {
             navigator.clipboard.writeText(window.location.href).then(() => {
                 const span = shareBtn.querySelector('span');
