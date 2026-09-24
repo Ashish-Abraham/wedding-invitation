@@ -43,6 +43,17 @@ body {
         max-width: 100%;
         box-shadow: none;
     }
+    .details-section {
+        padding: 135px 18px 70px 18px;
+    }
+    .top-left-flower {
+        width: 160px;
+        max-width: 45vw;
+    }
+    h1.names {
+        font-size: 2.05rem;
+        line-height: 1.25;
+    }
 }
 
 /* ===================================================================
@@ -268,21 +279,20 @@ video {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 120px 22px 80px 22px;
+    padding: 135px 22px 80px 22px;
     text-align: center;
     overflow: hidden;
 }
 
-/* Custom Roses Floral Corner Decor (Replacing Hibiscus) */
+/* Custom Roses Floral Corner Decor */
 .top-left-flower {
     position: absolute;
     top: 0;
     left: 0;
-    width: 250px;
-    max-width: 65vw;
+    width: 185px;
+    max-width: 48vw;
     z-index: 1;
     pointer-events: none;
-    mix-blend-mode: multiply;
     opacity: 0.95;
 }
 
@@ -294,7 +304,8 @@ video {
 }
 
 .names-block {
-    margin-bottom: 70px;
+    margin-top: 10px;
+    margin-bottom: 60px;
     text-align: center;
 }
 
@@ -313,21 +324,21 @@ video {
 }
 
 h1.names {
-    font-family: 'Playfair Display', 'Cinzel', serif;
-    font-size: 2.6rem;
-    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.35rem;
+    font-weight: 600;
     margin: 14px 0;
     color: #7d0e0e;
-    letter-spacing: 1px;
-    line-height: 1.15;
+    letter-spacing: 0.5px;
+    line-height: 1.22;
 }
 
 .ampersand {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: 1.9rem;
+    font-size: 1.85rem;
     display: inline-block;
-    margin: 6px 0;
+    margin: 4px 0;
     color: #9c2727;
 }
 
