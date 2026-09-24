@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Engagement | Anjita Abraham ❤️ Akash Joseph</title>
+
+    <!-- SEO & Social Media Meta Tags -->
+    <meta name="description"
+        content="Abraham Bousaly and Shinykutty Abraham cordially invite you and your family to join the Engagement of their daughter Anjita Abraham with Akash Joseph.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Engagement | Anjita Abraham ❤️ Akash Joseph">
+    <meta property="og:description" content="With joy in our hearts, we invite you to celebrate our Engagement.">
+    <meta property="og:image" content="assets/images/venue.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- Iconify & Confetti -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/audio/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Music Toggle -->
+    <button id="musicToggle" class="music-toggle" aria-label="Toggle music" title="Toggle Music">
+        <span id="musicIcon" class="music-icon">
+            <iconify-icon icon="solar:music-note-2-bold"></iconify-icon>
+        </span>
+    </button>
+
+    <!-- Phone Wrapper Container (Optimized for Mobile Phone Screens) -->
+    <div class="site-wrapper" id="siteWrapper">
+
+        <!-- 1. Hero Opening Video Section with Curtain Opening -->
+        <section class="hero-section" id="heroSection">
+            <div class="video-container">
+                <video id="curtainVideo" playsinline webkit-playsinline preload="auto" muted
+                    poster="assets/images/first.png">
+                    <source src="assets/videos/nadavd.mp4" type="video/mp4">
+                </video>
+
+                <div id="playOverlay" class="overlay">
+                    <div class="play-button" id="playBtn">
+                        <iconify-icon icon="majesticons:hand-click-line" class="hand-icon"></iconify-icon>
+                    </div>
+                    <p class="tap-text">Open Invitation</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Details & Invitation Section -->
+        <section class="details-section" id="detailsSection">
+            <!-- Custom Roses Corner Decor -->
+            <img src="assets/images/roses_corner.png" alt="Rose Flower Decor" class="top-left-flower">
+
+            <div class="content-wrapper scroll-animate">
+
+                <div class="names-block">
+                    <p class="small-text tracking-wide" style="margin-bottom: 18px;">IN FAITH, LOVE & FAMILY</p>
+                    <h1 class="names">Anjita Abraham<br><span class="ampersand">&</span><br>Akash Joseph</h1>
+
+                    <div class="ring-container">
+                        <img src="assets/images/rings.png" alt="Rings" class="ring-image">
+                    </div>
+
+                    <div class="stagger-anim delay-1 scroll-prompt-box">
+                        <p class="scroll-down-text">Scroll Down</p>
+                        <div class="scroll-line-anim">
+                            <span class="scroll-dot"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="details-text grace-text">By the Grace of God</p>
+
+                <div class="details-text formal-invite-text">
+                    <p class="invite-intro-text">
+                        We warmly invite you to share in the blessing and joyous beginning of our journey together.
+                    </p>
+
+                    <b class="person-name">Anjita Abraham</b><br>
+                    <span class="parentage-info">
+                        D/o Abraham Bousaly & Shinykutty Abraham<br>
+                        Azhakathu House, Ariyiruthi, Cherupuzha, Kannur
+                    </span>
+
+                    <div class="sacred-heart-symbol">♡</div>
+
+                    <b class="person-name">Akash Joseph</b><br>
+                    <span class="parentage-info">
+                        S/o Rejimon Mathew & Ammini TP<br>
+                        Puliyarmattathil House, Meenthulli, Kozhichal, Kannur
+                    </span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Scratch Date Reveal Section (13th Nov 2026) -->
+        <section class="scratch-section" id="scratchSection">
+            <div class="content-wrapper">
+
+                <p class="reveal-text">Reveal</p>
+                <p class="discover-text">SCRATCH TO DISCOVER THE DATE</p>
+
+                <div class="scratch-container">
+                    <!-- Day -->
+                    <div class="scratch-card">
+                        <div class="scratch-base"><span class="scratch-date">13th</span></div>
+                        <canvas class="scratch-canvas" width="92" height="92"></canvas>
+                    </div>
+                    <!-- Month -->
+                    <div class="scratch-card">
+                        <div class="scratch-base"><span class="scratch-date">Nov</span></div>
+                        <canvas class="scratch-canvas" width="92" height="92"></canvas>
+                    </div>
+                    <!-- Year -->
+                    <div class="scratch-card">
+                        <div class="scratch-base"><span class="scratch-date">2026</span></div>
+                        <canvas class="scratch-canvas" width="92" height="92"></canvas>
+                    </div>
+                </div>
+
+                <!-- Minimal Countdown Section Revealed After Scratching -->
+                <div id="hiddenCountdown" class="minimal-countdown hidden-countdown">
+                    <p class="countdown-heading">The Countdown Begins</p>
+
+                    <div class="timer">
+                        <div class="time-col">
+                            <span id="days" class="time-number">00</span>
+                            <span class="time-label">Days</span>
+                        </div>
+                        <span class="time-colon">:</span>
+                        <div class="time-col">
+                            <span id="hours" class="time-number">00</span>
+                            <span class="time-label">Hrs</span>
+                        </div>
+                        <span class="time-colon">:</span>
+                        <div class="time-col">
+                            <span id="minutes" class="time-number">00</span>
+                            <span class="time-label">Min</span>
+                        </div>
+                        <span class="time-colon">:</span>
+                        <div class="time-col">
+                            <span id="seconds" class="time-number">00</span>
+                            <span class="time-label">Sec</span>
+                        </div>
+                    </div>
+
+                    <!-- Add to Calendar Button -->
+                    <button id="calBtn" class="calendar-btn">
+                        <iconify-icon icon="solar:calendar-date-linear"></iconify-icon>
+                        <span>Add to Calendar ↗</span>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. Event Section (#Event ##Engagement ##Reception ##Wedding) -->
+        <section class="venue-section" id="eventSection">
+            <div class="venue-container scroll-animate">
+
+                <p class="reveal-text">Event</p>
+
+                <!-- ## Engagement -->
+                <div class="ceremony-subsection">
+                    <div class="event-details stagger-anim delay-1">
+                        <h3 class="event-title">Engagement</h3>
+                        <p class="event-time">Thursday, 13 November 2026 • 11:00 AM</p>
+                    </div>
+
+                    <div class="venue-image-box">
+                        <a href="https://maps.google.com/?q=St.+Sebastians+Church+Kannivayal" target="_blank"
+                            rel="noopener noreferrer" class="venue-link" title="Open Venue in Google Maps">
+                            <div class="venue-card-content">
+                                <span class="venue-tag">Ceremony & Sacrament</span>
+                                <h4 class="venue-hall-title">St. Sebastians Church</h4>
+                                <img src="assets/images/venue.png" alt="Venue Ornament" class="venue-img">
+                                <p class="venue-location-sub">Kannivayal, Kerala</p>
+                                <span class="venue-map-badge">
+                                    <iconify-icon icon="solar:map-point-linear"></iconify-icon>
+                                    <span>Get Directions ↗</span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sub-event-divider"></div>
+
+                <!-- ## Reception -->
+                <div class="ceremony-subsection">
+                    <div class="event-details stagger-anim delay-1">
+                        <h3 class="event-title">Reception</h3>
+                        <p class="event-time">Thursday, 13 November 2026</p>
+                    </div>
+
+                    <div class="venue-image-box">
+                        <a href="https://maps.google.com/?q=Meridian+Convention+Centre+Kakkenchal+Kannur"
+                            target="_blank" rel="noopener noreferrer" class="venue-link"
+                            title="Open Venue in Google Maps">
+                            <div class="venue-card-content">
+                                <span class="venue-tag">Banquet & Celebration</span>
+                                <h4 class="venue-hall-title">Meridian Convention Centre</h4>
+                                <img src="assets/images/venue.png" alt="Venue Ornament" class="venue-img">
+                                <p class="venue-location-sub">Kakkenchal, Kannur, Kerala</p>
+                                <span class="venue-map-badge">
+                                    <iconify-icon icon="solar:map-point-linear"></iconify-icon>
+                                    <span>Get Directions ↗</span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sub-event-divider"></div>
+
+                <!-- ## Wedding -->
+                <div class="ceremony-subsection">
+                    <div class="event-details stagger-anim delay-1">
+                        <h3 class="event-title">Wedding</h3>
+                        <p class="event-time">Thursday, 13 November 2026 • 12:30 PM</p>
+                    </div>
+
+                    <div class="venue-image-box">
+                        <a href="https://maps.google.com/?q=St.+Sebastians+Church+Kannivayal" target="_blank"
+                            rel="noopener noreferrer" class="venue-link" title="Open Venue in Google Maps">
+                            <div class="venue-card-content">
+                                <span class="venue-tag">Holy Matrimony</span>
+                                <h4 class="venue-hall-title">St. Sebastians Church</h4>
+                                <img src="assets/images/venue.png" alt="Venue Ornament" class="venue-img">
+                                <p class="venue-location-sub">Kannivayal, Kerala</p>
+                                <span class="venue-map-badge">
+                                    <iconify-icon icon="solar:map-point-linear"></iconify-icon>
+                                    <span>Get Directions ↗</span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. RSVP Section -->
+        <section class="rsvp-section" id="rsvpSection">
+            <div class="rsvp-container scroll-animate">
+
+                <div class="rsvp-card">
+                    <span class="rsvp-card-tag">R. S. V. P.</span>
+                    <h2 class="rsvp-title">Will You Join Our Big Day?</h2>
+                    <p class="rsvp-sub">Kindly respond by selecting your presence below</p>
+
+                    <div class="rsvp-options" role="radiogroup" aria-label="RSVP Response">
+                        <button id="yesBtn" class="rsvp-option" type="button" aria-pressed="false">
+                            <span class="rsvp-checkbox">
+                                <span class="rsvp-tick">✓</span>
+                            </span>
+                            <span class="rsvp-label">Delighted to Attend</span>
+                        </button>
+                        <button id="noBtn" class="rsvp-option" type="button" aria-pressed="false">
+                            <span class="rsvp-checkbox">
+                                <span class="rsvp-tick">✓</span>
+                            </span>
+                            <span class="rsvp-label">Sends Warmest Regrets</span>
+                        </button>
+                    </div>
+
+                    <div id="rsvpFeedbackBox" class="rsvp-feedback-box hidden">
+                        <p id="rsvpMessage" class="rsvp-message"></p>
+                        <a id="rsvpWaLink" href="#" target="_blank" rel="noopener noreferrer"
+                            class="rsvp-wa-link hidden">
+                            <iconify-icon icon="logos:whatsapp-icon" class="wa-ico"></iconify-icon>
+                            <span>Confirm via WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. Best Compliments From Section -->
+        <section class="thankyou-section" id="thankyouSection">
+            <div class="thankyou-container stagger-anim">
+                <div class="frame-wrap">
+                    <img src="assets/images/couple.jpg" alt="Couple Frame" class="thankyou-img">
+                </div>
+                <h2 class="regards-heading">Best Compliments</h2>
+            </div>
+        </section>
+
+        <!-- 7. Footer / Branding Bar -->
+        <div class="branding-bar">
+            <button id="shareBtn" class="share-btn">
+                <iconify-icon icon="solar:share-bold"></iconify-icon>
+                <span>Share Invitation</span>
+            </button>
+            <p class="leora-tag">
+                Anjita Abraham ❤️ Akash Joseph • 13 November 2026
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
