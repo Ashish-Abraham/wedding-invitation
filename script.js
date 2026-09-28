@@ -450,8 +450,8 @@ function setupScratchCards() {
    5. LIVE COUNTDOWN TIMER
    =================================================================== */
 function setupLiveCountdown() {
-    // Engagement Date: November 13, 2026, 10:30 AM IST
-    const countdownDate = new Date("Nov 13, 2026 10:30:00").getTime();
+    // Wedding Date: November 14, 2026, 10:30 AM IST
+    const countdownDate = new Date("Nov 14, 2026 10:30:00").getTime();
 
     const dEl = document.getElementById("days");
     const hEl = document.getElementById("hours");
@@ -493,11 +493,11 @@ function setupCalendarSync() {
     if (!calBtn) return;
 
     calBtn.addEventListener('click', () => {
-        const title = 'Engagement | Anjita Abraham & Akash Joseph';
-        const location = 'St. Sebastians Church, Kannivayal & Meridian Convention Centre, Kakkenchal';
-        const description = 'Join us to celebrate the auspicious Engagement Ceremony of Anjita Abraham with Akash Joseph!';
-        const startUtc = '20261113T050000Z'; // 10:30 AM IST is 05:00 AM UTC
-        const endUtc = '20261113T120000Z';
+        const title = 'Wedding | Anjita Abraham & Akash Joseph';
+        const location = 'St. Thomas’s Forane Church, Thomapuram';
+        const description = 'Wedding Ceremony at St. Thomas’s Forane Church Thomapuram on 14 Nov 2026 (10:30 AM) | Engagement (4:30 PM) & Reception (6:00 PM) on 12 Nov 2026';
+        const startUtc = '20261114T050000Z'; // 10:30 AM IST is 05:00 AM UTC
+        const endUtc = '20261114T120000Z';
 
         const isApple = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
 
@@ -521,7 +521,7 @@ function setupCalendarSync() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'anjita-akash-engagement.ics';
+            a.download = 'anjita-akash-wedding.ics';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -553,7 +553,7 @@ function setupRSVP() {
         message.innerText = "Thank you! We look forward to celebrating together.";
         if (feedbackBox) feedbackBox.classList.remove('hidden');
 
-        const waMsg = "Hi Anjita & Akash! ❤️ I'm delighted to accept your kind invitation for November 13, 2026! 🎉";
+        const waMsg = "Hi Anjita & Akash! ❤️ I'm delighted to accept your kind invitation to celebrate your Wedding & Engagement! 🎉";
         if (waLink) {
             waLink.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
             waLink.classList.remove('hidden');
@@ -601,8 +601,8 @@ function setupShareButton() {
 
     shareBtn.addEventListener('click', () => {
         const shareData = {
-            title: 'Engagement | Anjita Abraham ❤️ Akash Joseph',
-            text: 'With joy in our hearts, we invite you to celebrate the Engagement of Anjita Abraham with Akash Joseph on 13 November 2026! 💍✨',
+            title: 'Wedding Invitation | Anjita Abraham ❤️ Akash Joseph',
+            text: 'With joy in our hearts, we invite you to celebrate the Wedding of Anjita Abraham with Akash Joseph on 14 November 2026! 💍✨',
             url: window.location.href
         };
 
