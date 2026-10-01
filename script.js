@@ -1,484 +1,197 @@
 /* ===================================================================
-   ENGAGEMENT & WEDDING INVITATION SCRIPT
-   Reference: https://varsha-sachin.vercel.app/
-   Features: Video Curtain Opener, Audio, Scratch Cards, Live Countdown, RSVP
+   MINIMALISM DARK BROWN — WEDDING INVITATION SCRIPT
+   Couple: Anjita Abraham & Akash Joseph
+   Date: 14 November 2026 • 10:30 AM IST
+   Venue: St. Thomas’s Forane Church, Thomapuram, Kerala
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initWeddingApp();
+    initEnvelopeOpener();
+    initAmbientPetals();
+    initAudioController();
+    initLiveCountdown();
+    initCalendarIntegration();
+    initRSVP();
+    initShareButton();
 });
 
-function initWeddingApp() {
-    setupHeroCurtainVideo();
-    setupAudioController();
-    setupIntersectionObserver();
-    setupScratchCards();
-    setupLiveCountdown();
-    setupRSVP();
-    setupCalendarSync();
-    setupShareButton();
-}
-
 /* ===================================================================
-   1. HERO VIDEO CURTAIN OPENER
+   1. AMBIENT FALLING PETALS
    =================================================================== */
-function setupHeroCurtainVideo() {
-    const video = document.getElementById('curtainVideo');
-    const playOverlay = document.getElementById('playOverlay');
-    const heroSection = document.getElementById('heroSection');
+function initAmbientPetals() {
+    const container = document.getElementById('ambientPetals');
+    if (!container) return;
 
-    if (!video || !playOverlay) return;
+    const colors = ['#C9A24A', '#7D553E', '#ECE4D8', '#593D2C', '#E0C178'];
+    const petalCount = 18;
 
-    let experienceStarted = false;
-    let heroDismissed = false;
+    for (let i = 0; i < petalCount; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'ambient-petal';
 
-    const startExperience = () => {
-        if (experienceStarted) return;
-        experienceStarted = true;
+        const size = Math.random() * 12 + 10; // 10px to 22px
+        const left = Math.random() * 100;
+        const duration = Math.random() * 10 + 14; // 14s to 24s
+        const delay = Math.random() * -20; // start immediately spread out
+        const sway = (Math.random() * 50 - 25) + 'px';
+        const color = colors[Math.floor(Math.random() * colors.length)];
 
-        // Pre-warm / prime audio silently on this user touch gesture so iOS and Android allow play later
-        const music = document.getElementById('bgMusic');
-        if (music) {
-            music.volume = 0;
-            const primePromise = music.play();
-            if (primePromise !== undefined) {
-                primePromise.then(() => {
-                    // Audio unlocked and primed silently in background
-                }).catch(e => console.log('Audio priming:', e));
-            }
-        }
+        petal.style.left = `${left}%`;
+        petal.style.width = `${size}px`;
+        petal.style.height = `${size}px`;
+        petal.style.animationDuration = `${duration}s`;
+        petal.style.animationDelay = `${delay}s`;
+        petal.style.setProperty('--sway', sway);
 
-        // Fade overlay out
-        playOverlay.style.opacity = '0';
-        setTimeout(() => {
-            playOverlay.style.display = 'none';
-        }, 500);
+        // Simple elegant petal SVG
+        petal.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="${color}" width="100%" height="100%">
+                <path d="M12 2C8 6 4 11 4 15a8 8 0 0 0 16 0c0-4-4-9-8-13z" opacity="0.85"/>
+            </svg>
+        `;
 
-        // Play the curtain opening video
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise.catch((err) => {
-                console.log("Video autoplay prevented or failed:", err);
-                dismissHeroSection();
-            });
-        }
-    };
-
-    const dismissHeroSection = () => {
-        if (heroDismissed || !heroSection) return;
-        heroDismissed = true;
-
-        heroSection.style.opacity = '0';
-        heroSection.style.visibility = 'hidden';
-
-        // THE CARD IS NOW OPEN: Start the music right as the card reveals!
-        startCardMusic();
-
-        setTimeout(() => {
-            heroSection.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            document.body.style.overflowY = 'auto';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 1200);
-    };
-
-    playOverlay.addEventListener('click', startExperience);
-    playOverlay.addEventListener('touchstart', startExperience, { passive: true });
-
-    // When video ends, smoothly dissolve hero section, open card, and start music
-    video.addEventListener('ended', dismissHeroSection);
-
-    // If user clicks the video during playback, allow skipping straight to card
-    video.addEventListener('click', dismissHeroSection);
-}
-
-/* ===================================================================
-   2. AUDIO CONTROLLER & ROMANTIC AMBIENT HARP FALLBACK
-   =================================================================== */
-let isMusicPlaying = false;
-let userManuallyToggled = false;
-let audioContext = null;
-let harpTimer = null;
-
-function startCardMusic() {
-    if (userManuallyToggled) return; // User already chose to mute
-    const music = document.getElementById('bgMusic');
-    if (music) {
-        music.currentTime = 0;
-        music.volume = 0.45;
-        const p = music.play();
-        if (p !== undefined) {
-            p.then(() => {
-                isMusicPlaying = true;
-                updateMusicIcon(true);
-            }).catch(err => {
-                console.log("Audio play on card open:", err);
-                startHarpSynthesizer();
-                isMusicPlaying = true;
-                updateMusicIcon(true);
-            });
-        }
-    } else {
-        startHarpSynthesizer();
-        isMusicPlaying = true;
-        updateMusicIcon(true);
-    }
-}
-
-function setupAudioController() {
-    const musicToggle = document.getElementById('musicToggle');
-
-    if (!musicToggle) return;
-
-    musicToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        userManuallyToggled = true;
-
-        if (isMusicPlaying) {
-            pauseMusic();
-        } else {
-            playMusic();
-        }
-    });
-
-    // Pause audio when browser is minimized or tab is hidden
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-            if (isMusicPlaying) {
-                pauseMusic(false);
-            }
-        }
-    });
-}
-
-function updateMusicIcon(playing) {
-    const musicIcon = document.getElementById('musicIcon');
-    const musicToggle = document.getElementById('musicToggle');
-    if (!musicToggle) return;
-    if (musicIcon && !musicIcon.querySelector('iconify-icon')) {
-        musicIcon.innerHTML = '<iconify-icon icon="solar:music-note-2-bold"></iconify-icon>';
-    }
-    if (playing) {
-        musicToggle.classList.add('playing');
-        musicToggle.setAttribute('aria-label', 'Mute background music');
-        musicToggle.setAttribute('title', 'Mute Music');
-    } else {
-        musicToggle.classList.remove('playing');
-        musicToggle.setAttribute('aria-label', 'Play background music');
-        musicToggle.setAttribute('title', 'Play Music');
-    }
-}
-
-function playMusic() {
-    const music = document.getElementById('bgMusic');
-    stopHarpSynthesizer();
-
-    if (music) {
-        music.volume = 0.45;
-        const promise = music.play();
-        if (promise !== undefined) {
-            promise.then(() => {
-                isMusicPlaying = true;
-                updateMusicIcon(true);
-            }).catch((err) => {
-                console.log("playMusic fallback:", err);
-                startHarpSynthesizer();
-                isMusicPlaying = true;
-                updateMusicIcon(true);
-            });
-        }
-    } else {
-        startHarpSynthesizer();
-        isMusicPlaying = true;
-        updateMusicIcon(true);
-    }
-}
-
-function pauseMusic(updateIcon = true) {
-    const music = document.getElementById('bgMusic');
-
-    if (music) {
-        music.pause();
-    }
-    stopHarpSynthesizer();
-
-    if (updateIcon) {
-        isMusicPlaying = false;
-        updateMusicIcon(false);
-    }
-}
-
-/* Ambient romantic harp tone generator if user hasn't added music.mp3 yet */
-function startHarpSynthesizer() {
-    if (harpTimer) return;
-    try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        if (!audioContext) audioContext = new AudioCtx();
-        if (audioContext.state === 'suspended') audioContext.resume();
-
-        const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
-        let idx = 0;
-
-        const pluck = () => {
-            if (!audioContext || audioContext.state !== 'running') return;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(notes[idx % notes.length], audioContext.currentTime);
-
-            gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.06, audioContext.currentTime + 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 1.6);
-
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-
-            osc.start();
-            osc.stop(audioContext.currentTime + 1.7);
-
-            idx = (idx + Math.floor(Math.random() * 3 + 1)) % notes.length;
-        };
-
-        pluck();
-        harpTimer = setInterval(pluck, 1800);
-    } catch (e) {
-        // Silently handled
-    }
-}
-
-function stopHarpSynthesizer() {
-    if (harpTimer) {
-        clearInterval(harpTimer);
-        harpTimer = null;
+        container.appendChild(petal);
     }
 }
 
 /* ===================================================================
-   3. SCROLL INTERSECTION OBSERVER
+   2. ENVELOPE OPENER EXPERIENCE
    =================================================================== */
-function setupIntersectionObserver() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, {
-        threshold: 0.15
-    });
+function initEnvelopeOpener() {
+    const overlay = document.getElementById('envelopeOverlay');
+    const openBtn = document.getElementById('openInviteBtn');
+    const waxSeal = document.getElementById('waxSeal');
 
-    const scrollElements = document.querySelectorAll('.scroll-animate, .stagger-anim');
-    scrollElements.forEach(el => observer.observe(el));
-}
+    if (!overlay || !openBtn) return;
 
-/* ===================================================================
-   4. SCRATCH CARDS SYSTEM (Day, Month, Year)
-   =================================================================== */
-function setupScratchCards() {
-    const canvases = document.querySelectorAll('.scratch-canvas');
-    let completedCount = 0;
+    // Initially lock scroll while envelope is closed
+    document.body.classList.add('locked');
 
-    canvases.forEach(canvas => {
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        let isDrawing = false;
-        let isCompleted = false;
-        let lastX = 0;
-        let lastY = 0;
+    const openInvitation = () => {
+        if (overlay.classList.contains('opened')) return;
 
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
+        // Smoothly fade out overlay
+        overlay.classList.add('opened');
+        document.body.classList.remove('locked');
 
-        // Realistic Gold Conic Gradient
-        let gradient;
-        if (ctx.createConicGradient) {
-            gradient = ctx.createConicGradient(0, cx, cy);
-            gradient.addColorStop(0, "#e8c37d");
-            gradient.addColorStop(0.125, "#fff2b2");
-            gradient.addColorStop(0.25, "#d4af37");
-            gradient.addColorStop(0.375, "#ca9a2b");
-            gradient.addColorStop(0.5, "#fcefba");
-            gradient.addColorStop(0.625, "#e8c37d");
-            gradient.addColorStop(0.75, "#d4af37");
-            gradient.addColorStop(0.875, "#fff2b2");
-            gradient.addColorStop(1, "#e8c37d");
-        } else {
-            gradient = ctx.createRadialGradient(cx, cy, 10, cx, cy, cx);
-            gradient.addColorStop(0, "#fcefba");
-            gradient.addColorStop(1, "#d4af37");
-        }
+        // Play background audio seamlessly
+        playAudio();
 
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Gold dust stipple texture
-        ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
-        for (let i = 0; i < 200; i++) {
-            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1.5, 1.5);
-        }
-
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 22;
-
-        function getMousePos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-
-            let clientX, clientY;
-            if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else if (e.changedTouches && e.changedTouches.length > 0) {
-                clientX = e.changedTouches[0].clientX;
-                clientY = e.changedTouches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-
-            return {
-                x: (clientX - rect.left) * scaleX,
-                y: (clientY - rect.top) * scaleY
-            };
-        }
-
-        function scratch(e) {
-            if (!isDrawing || isCompleted) return;
-            if (e.cancelable) e.preventDefault();
-
-            const pos = getMousePos(e);
-
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-
-            lastX = pos.x;
-            lastY = pos.y;
-
-            checkCompletion();
-        }
-
-        canvas.addEventListener('mousedown', (e) => {
-            isDrawing = true;
-            const pos = getMousePos(e);
-            lastX = pos.x;
-            lastY = pos.y;
-        });
-
-        canvas.addEventListener('mousemove', scratch);
-
-        window.addEventListener('mouseup', () => {
-            isDrawing = false;
-        });
-
-        canvas.addEventListener('touchstart', (e) => {
-            isDrawing = true;
-            const pos = getMousePos(e);
-            lastX = pos.x;
-            lastY = pos.y;
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', scratch, { passive: false });
-
-        window.addEventListener('touchend', () => {
-            isDrawing = false;
-        });
-
-        function checkCompletion() {
-            if (isCompleted) return;
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            let transparentPixels = 0;
-            const totalPixels = imageData.data.length / 4;
-
-            for (let i = 3; i < imageData.data.length; i += 16) {
-                if (imageData.data[i] < 60) {
-                    transparentPixels++;
-                }
-            }
-
-            const transparentRatio = transparentPixels / (totalPixels / 4);
-            if (transparentRatio > 0.08) { // 8% scratched threshold for swift mobile completion
-                isCompleted = true;
-
-                canvas.style.transition = 'opacity 0.4s ease';
-                canvas.style.opacity = '0';
-
-                const card = canvas.closest('.scratch-card');
-                if (card) card.classList.add('revealed');
-
-                setTimeout(() => {
-                    canvas.style.display = 'none';
-                }, 400);
-
-                completedCount++;
-                if (completedCount === 3) {
-                    onAllScratched();
-                }
-            }
-        }
-    });
-
-    function onAllScratched() {
-        const cards = document.querySelectorAll('.scratch-card');
-        cards.forEach((card, idx) => {
+        // Optional subtle welcoming confetti burst
+        if (typeof confetti === 'function') {
             setTimeout(() => {
-                card.classList.add('foil-sheen');
-            }, idx * 140);
-        });
-
-        // Reveal the hidden countdown with a calm, dignified editorial dissolve
-        const hiddenCountdown = document.getElementById('hiddenCountdown');
-        if (hiddenCountdown) {
-            setTimeout(() => {
-                hiddenCountdown.classList.add('show');
-                hiddenCountdown.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
+                confetti({
+                    particleCount: 35,
+                    spread: 60,
+                    origin: { y: 0.6 },
+                    colors: ['#C9A24A', '#593D2C', '#ECE4D8'],
+                    disableForReducedMotion: true
                 });
             }, 600);
         }
+
+        // Clean up overlay after animation ends
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 850);
+    };
+
+    openBtn.addEventListener('click', openInvitation);
+    if (waxSeal) {
+        waxSeal.style.cursor = 'pointer';
+        waxSeal.addEventListener('click', openInvitation);
     }
 }
 
 /* ===================================================================
-   5. LIVE COUNTDOWN TIMER
+   3. BACKGROUND AUDIO CONTROLLER
    =================================================================== */
-function setupLiveCountdown() {
-    // Wedding Date: November 14, 2026, 10:30 AM IST
-    const countdownDate = new Date("Nov 14, 2026 10:30:00").getTime();
+let isPlaying = false;
 
-    const dEl = document.getElementById("days");
-    const hEl = document.getElementById("hours");
-    const mEl = document.getElementById("minutes");
-    const sEl = document.getElementById("seconds");
+function initAudioController() {
+    const musicBtn = document.getElementById('musicToggle');
+    const musicAudio = document.getElementById('bgMusic');
+
+    if (!musicBtn || !musicAudio) return;
+
+    musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            pauseAudio();
+        } else {
+            playAudio();
+        }
+    });
+}
+
+function playAudio() {
+    const musicAudio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicToggle');
+    if (!musicAudio) return;
+
+    musicAudio.volume = 0.55;
+    const playPromise = musicAudio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            isPlaying = true;
+            if (musicBtn) {
+                musicBtn.classList.add('playing');
+                musicBtn.setAttribute('title', 'Pause Music');
+            }
+        }).catch((err) => {
+            console.log("Audio autoplay constrained:", err);
+            isPlaying = false;
+            if (musicBtn) musicBtn.classList.remove('playing');
+        });
+    }
+}
+
+function pauseAudio() {
+    const musicAudio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicToggle');
+    if (!musicAudio) return;
+
+    musicAudio.pause();
+    isPlaying = false;
+    if (musicBtn) {
+        musicBtn.classList.remove('playing');
+        musicBtn.setAttribute('title', 'Play Music');
+    }
+}
+
+/* ===================================================================
+   4. LIVE WEDDING COUNTDOWN TIMER
+   =================================================================== */
+function initLiveCountdown() {
+    // 14 November 2026, 10:30 AM IST (UTC+05:30)
+    const weddingTime = new Date("2026-11-14T10:30:00+05:30").getTime();
+
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
 
     const updateTimer = () => {
         const now = new Date().getTime();
-        const distance = countdownDate - now;
+        const difference = weddingTime - now;
 
-        if (distance < 0) {
-            if (dEl) dEl.innerHTML = "00";
-            if (hEl) hEl.innerHTML = "00";
-            if (mEl) mEl.innerHTML = "00";
-            if (sEl) sEl.innerHTML = "00";
+        if (difference <= 0) {
+            if (daysEl) daysEl.textContent = "00";
+            if (hoursEl) hoursEl.textContent = "00";
+            if (minutesEl) minutesEl.textContent = "00";
+            if (secondsEl) secondsEl.textContent = "00";
             return;
         }
 
-        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        if (dEl) dEl.innerHTML = days < 10 ? '0' + days : days;
-        if (hEl) hEl.innerHTML = hours < 10 ? '0' + hours : hours;
-        if (mEl) mEl.innerHTML = minutes < 10 ? '0' + minutes : minutes;
-        if (sEl) sEl.innerHTML = seconds < 10 ? '0' + seconds : seconds;
+        if (daysEl) daysEl.textContent = days < 10 ? `0${days}` : days;
+        if (hoursEl) hoursEl.textContent = hours < 10 ? `0${hours}` : hours;
+        if (minutesEl) minutesEl.textContent = minutes < 10 ? `0${minutes}` : minutes;
+        if (secondsEl) secondsEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
     };
 
     updateTimer();
@@ -486,26 +199,31 @@ function setupLiveCountdown() {
 }
 
 /* ===================================================================
-   6. CALENDAR INTEGRATION
+   5. CALENDAR INTEGRATION (iCal & Google Calendar)
    =================================================================== */
-function setupCalendarSync() {
-    const calBtn = document.getElementById('calBtn');
-    if (!calBtn) return;
+function initCalendarIntegration() {
+    const addCalendarBtn = document.getElementById('addCalendarBtn');
+    if (!addCalendarBtn) return;
 
-    calBtn.addEventListener('click', () => {
-        const title = 'Wedding | Anjita Abraham & Akash Joseph';
-        const location = 'St. Thomas’s Forane Church, Thomapuram';
-        const description = 'Wedding Ceremony at St. Thomas’s Forane Church Thomapuram on 14 Nov 2026 (10:30 AM) | Engagement (4:30 PM) & Reception (6:00 PM) on 12 Nov 2026';
-        const startUtc = '20261114T050000Z'; // 10:30 AM IST is 05:00 AM UTC
-        const endUtc = '20261114T120000Z';
+    addCalendarBtn.addEventListener('click', () => {
+        const title = "Holy Matrimony & Wedding: Anjita & Akash";
+        const location = "St. Thomas’s Forane Church, Thomapuram, Kerala";
+        const description = "Wedding Celebration of Anjita Abraham & Akash Joseph. Holy Matrimony begins at 10:30 AM followed by Reception.";
+        
+        // 14 Nov 2026, 10:30 AM IST = 05:00 UTC
+        const startUtc = "20261114T050000Z";
+        const endUtc = "20261114T110000Z";
 
-        const isApple = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+        const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
 
-        if (isApple) {
-            const icsContent = [
+        if (isAppleDevice) {
+            // Generate standard iCalendar .ics file
+            const icsData = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
                 'PRODID:-//Anjita Akash Wedding//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
                 'BEGIN:VEVENT',
                 `SUMMARY:${title}`,
                 `DESCRIPTION:${description}`,
@@ -517,107 +235,97 @@ function setupCalendarSync() {
                 'END:VCALENDAR'
             ].join('\r\n');
 
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'anjita-akash-wedding.ics';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', 'anjita-akash-wedding.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(downloadUrl);
         } else {
+            // Open direct Google Calendar Event Creation
             const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startUtc}/${endUtc}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}`;
-            window.open(gCalUrl, '_blank');
+            window.open(gCalUrl, '_blank', 'noopener,noreferrer');
         }
     });
 }
 
 /* ===================================================================
-   7. INTERACTIVE RSVP & WHATSAPP INTEGRATION
+   6. INTERACTIVE RSVP & DIRECT WHATSAPP CONFIRMATION
    =================================================================== */
-function setupRSVP() {
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const message = document.getElementById('rsvpMessage');
-    const feedbackBox = document.getElementById('rsvpFeedbackBox');
-    const waLink = document.getElementById('rsvpWaLink');
+function initRSVP() {
+    const yesBtn = document.getElementById('rsvpYes');
+    const noBtn = document.getElementById('rsvpNo');
+    const waBtn = document.getElementById('rsvpWhatsAppBtn');
 
-    if (!yesBtn || !noBtn || !message) return;
+    if (!yesBtn || !noBtn || !waBtn) return;
 
-    yesBtn.addEventListener('click', (e) => {
-        yesBtn.classList.add('selected');
-        yesBtn.setAttribute('aria-pressed', 'true');
-        noBtn.classList.remove('selected');
-        noBtn.setAttribute('aria-pressed', 'false');
+    const setAttendance = (isAttending, triggerConfetti = false, event = null) => {
+        let message = '';
+        if (isAttending) {
+            yesBtn.classList.add('selected');
+            yesBtn.setAttribute('aria-pressed', 'true');
+            noBtn.classList.remove('selected');
+            noBtn.setAttribute('aria-pressed', 'false');
 
-        message.innerText = "Thank you! We look forward to celebrating together.";
-        if (feedbackBox) feedbackBox.classList.remove('hidden');
+            message = "Hi Anjita & Akash! ❤️ I am delighted to accept your wedding invitation and will be attending. Looking forward to joining you on 14 November! 🎉✨";
 
-        const waMsg = "Hi Anjita & Akash! ❤️ I'm delighted to accept your kind invitation to celebrate your Wedding & Engagement! 🎉";
-        if (waLink) {
-            waLink.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
-            waLink.classList.remove('hidden');
+            if (triggerConfetti && typeof confetti === 'function' && event) {
+                const rect = event.currentTarget.getBoundingClientRect();
+                const originX = (rect.left + rect.width / 2) / window.innerWidth;
+                const originY = (rect.top + rect.height / 2) / window.innerHeight;
+
+                confetti({
+                    particleCount: 50,
+                    spread: 55,
+                    origin: { x: originX, y: originY },
+                    colors: ['#C9A24A', '#FFFFFF', '#593D2C']
+                });
+            }
+        } else {
+            noBtn.classList.add('selected');
+            noBtn.setAttribute('aria-pressed', 'true');
+            yesBtn.classList.remove('selected');
+            yesBtn.setAttribute('aria-pressed', 'false');
+
+            message = "Hi Anjita & Akash! ❤️ Warmest congratulations on your wedding! Regretfully I won't be able to attend in person, but my heartfelt prayers and blessings are always with you both! 🌸";
         }
 
-        let originY = 0.8;
-        let originX = 0.5;
-        if (e.currentTarget) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            originY = (rect.top + rect.height / 2) / window.innerHeight;
-            originX = (rect.left + rect.width / 2) / window.innerWidth;
-        }
+        waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+    };
 
-        if (typeof confetti === 'function') {
-            confetti({
-                particleCount: 50,
-                spread: 45,
-                origin: { x: originX, y: originY },
-                colors: ['#D4AF37', '#ffffff', '#7d0e0e'],
-                zIndex: 9999
-            });
-        }
-    });
-
-    noBtn.addEventListener('click', () => {
-        noBtn.classList.add('selected');
-        noBtn.setAttribute('aria-pressed', 'true');
-        yesBtn.classList.remove('selected');
-        yesBtn.setAttribute('aria-pressed', 'false');
-
-        message.innerText = "You will be dearly missed, and will remain warmly in our hearts and prayers.";
-        if (feedbackBox) feedbackBox.classList.remove('hidden');
-        if (waLink) waLink.classList.add('hidden');
-    });
+    yesBtn.addEventListener('click', (e) => setAttendance(true, true, e));
+    noBtn.addEventListener('click', (e) => setAttendance(false, false, e));
 }
 
-
-
 /* ===================================================================
-   9. SHARE BUTTON
+   7. SHARE INVITATION
    =================================================================== */
-function setupShareButton() {
-    const shareBtn = document.getElementById('shareBtn');
+function initShareButton() {
+    const shareBtn = document.getElementById('shareInviteBtn');
     if (!shareBtn) return;
 
     shareBtn.addEventListener('click', () => {
         const shareData = {
-            title: 'Wedding Invitation | Anjita Abraham ❤️ Akash Joseph',
-            text: 'With joy in our hearts, we invite you to celebrate the Wedding of Anjita Abraham with Akash Joseph on 14 November 2026! 💍✨',
+            title: 'Wedding Invitation | Anjita Abraham & Akash Joseph',
+            text: 'We cordially invite you to celebrate the Holy Matrimony & Wedding Reception of Anjita Abraham and Akash Joseph on Saturday, 14 November 2026! 💍✨',
             url: window.location.href
         };
 
         if (navigator.share) {
-            navigator.share(shareData).catch(() => { });
+            navigator.share(shareData).catch(() => {});
         } else {
             navigator.clipboard.writeText(window.location.href).then(() => {
                 const span = shareBtn.querySelector('span');
                 const orig = span ? span.textContent : '';
-                if (span) span.textContent = 'Link Copied! 📋';
+                if (span) span.textContent = 'Invitation Link Copied! 📋';
                 setTimeout(() => {
                     if (span) span.textContent = orig;
-                }, 2000);
+                }, 2200);
             }).catch(() => {
-                alert('Invitation URL: ' + window.location.href);
+                alert('Invitation Link: ' + window.location.href);
             });
         }
     });
