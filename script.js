@@ -1,6 +1,6 @@
 /* ===================================================================
    MINIMALISM DARK BROWN — WEDDING INVITATION SCRIPT
-   Couple: Anjita Abraham & Akash Joseph
+   Couple: Akash Joseph & Anjita Abraham
    Date: 14 November 2026 • 10:30 AM IST
    Venue: St. Thomas’s Forane Church, Thomapuram, Kerala
    =================================================================== */
@@ -206,9 +206,9 @@ function initCalendarIntegration() {
     if (!addCalendarBtn) return;
 
     addCalendarBtn.addEventListener('click', () => {
-        const title = "Holy Matrimony & Wedding: Anjita & Akash";
+        const title = "Holy Matrimony & Wedding: Akash & Anjita";
         const location = "St. Thomas’s Forane Church, Thomapuram, Kerala";
-        const description = "Wedding Celebration of Anjita Abraham & Akash Joseph. Holy Matrimony begins at 10:30 AM followed by Reception.";
+        const description = "Wedding Celebration of Akash Joseph & Anjita Abraham. Holy Matrimony begins at 10:30 AM followed by Reception.";
         
         // 14 Nov 2026, 10:30 AM IST = 05:00 UTC
         const startUtc = "20261114T050000Z";
@@ -221,7 +221,7 @@ function initCalendarIntegration() {
             const icsData = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
-                'PRODID:-//Anjita Akash Wedding//EN',
+                'PRODID:-//Akash Anjita Wedding//EN',
                 'CALSCALE:GREGORIAN',
                 'METHOD:PUBLISH',
                 'BEGIN:VEVENT',
@@ -239,7 +239,7 @@ function initCalendarIntegration() {
             const downloadUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.setAttribute('download', 'anjita-akash-wedding.ics');
+            link.setAttribute('download', 'akash-anjita-wedding.ics');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -270,7 +270,7 @@ function initRSVP() {
             noBtn.classList.remove('selected');
             noBtn.setAttribute('aria-pressed', 'false');
 
-            message = "Hi Anjita & Akash! ❤️ I am delighted to accept your wedding invitation and will be attending. Looking forward to joining you on 14 November! 🎉✨";
+            message = "Hi Akash & Anjita! ❤️ I am delighted to accept your wedding invitation and will be attending. Looking forward to joining you on 14 November! 🎉✨";
 
             if (triggerConfetti && typeof confetti === 'function' && event) {
                 const rect = event.currentTarget.getBoundingClientRect();
@@ -290,7 +290,7 @@ function initRSVP() {
             yesBtn.classList.remove('selected');
             yesBtn.setAttribute('aria-pressed', 'false');
 
-            message = "Hi Anjita & Akash! ❤️ Warmest congratulations on your wedding! Regretfully I won't be able to attend in person, but my heartfelt prayers and blessings are always with you both! 🌸";
+            message = "Hi Akash & Anjita! ❤️ Warmest congratulations on your wedding! Regretfully I won't be able to attend in person, but my heartfelt prayers and blessings are always with you both! 🌸";
         }
 
         waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
@@ -309,8 +309,8 @@ function initShareButton() {
 
     shareBtn.addEventListener('click', () => {
         const shareData = {
-            title: 'Wedding Invitation | Anjita Abraham & Akash Joseph',
-            text: 'We cordially invite you to celebrate the Holy Matrimony & Wedding Reception of Anjita Abraham and Akash Joseph on Saturday, 14 November 2026! 💍✨',
+            title: 'Wedding Invitation | Akash Joseph & Anjita Abraham',
+            text: 'We cordially invite you to celebrate the Holy Matrimony & Wedding Reception of Akash Joseph and Anjita Abraham on Saturday, 14 November 2026! 💍✨',
             url: window.location.href
         };
 
